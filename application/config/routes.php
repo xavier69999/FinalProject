@@ -56,6 +56,10 @@ $route['auth/checkUser'] = 'triuneAuth/checkUserName';
 $route['auth/create'] = 'triuneAuth/createToken';
 $route['auth/forgot'] = 'triuneAuth/forgotPassword';
 $route['auth/hello'] = 'triuneAuth/index';
+$route['main'] = 'triuneAuth/mainView';
+$route['main/jobRequest'] = 'triuneMain/jobRequest';
+$route['bamjrs/create'] = 'triuneJRS/BAMCreateRequest';
+
 
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;

@@ -58,7 +58,7 @@ class triuneAuth extends MY_Controller {
             $this->load->view('authentication/login', $data);
             $this->load->view('authentication/footer', $data);
 		}else{
-			
+
 			$post = $this->input->post();  
 			$clean = $this->security->xss_clean($post);
 			
@@ -67,9 +67,11 @@ class triuneAuth extends MY_Controller {
 
 			if(!empty($getPassword)) {
 				$decryptedPassword = $this->encryption->decrypt($getPassword[0]->password);
-			
+				
+				//WHEN LOGIN IS SUCCESSFULL
 				if($decryptedPassword == $clean['password']) {
-                    foreach($getPassword[0] as $key=>$val){
+		
+					foreach($getPassword[0] as $key=>$val){
                         $this->session->set_userdata($key, $val);
                     }
         
@@ -78,7 +80,9 @@ class triuneAuth extends MY_Controller {
                     );
                     $recordUpdated = $this->_updateRecords($tableName = 'triune_user', $fieldName = array('ID'), $where = array($getPassword[0]->ID), $triuneUserUpdate);
         
-                    echo "login successfull";
+					//echo "login successfull";
+					redirect(base_url().'main');
+					
         
                 } else {
 					$this->session->set_flashdata('msg', 'The login was unsucessful, username and password did not match');
@@ -97,6 +101,12 @@ class triuneAuth extends MY_Controller {
 
 
 
+	public function mainView() {
+		header("Access-Control-Allow-Origin: *");
+		$data['title'] = "MAIN";
+
+		$this->load->view('main/header', $data);
+	}
 
 
 	public function registrationView()
@@ -220,7 +230,7 @@ class triuneAuth extends MY_Controller {
  
                     //echo $message; //send this in email
 					
-					$this->_sendMail($toEmail ="rdlagdaan@gmail.com", $subject = "token created", $message);
+					$this->_sendMail($toEmail ="dcisleta@tua.edu.ph", $subject = "For Verification", $message);
 
 				} else {
 					$this->session->set_flashdata('msg', "The personal information you've typed do not matched with your current records!");
