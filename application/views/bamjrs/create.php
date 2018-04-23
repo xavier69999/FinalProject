@@ -1,34 +1,98 @@
-<link rel="stylesheet" type="text/css" href="<?php echo base_url();?>assets/thirdparty/easyui/themes/default/easyui.css">
+
+<div class="requestForm">
+    <link rel="stylesheet" type="text/css" href="<?php echo base_url();?>assets/thirdparty/easyui/themes/default/easyui.css">
     <link rel="stylesheet" type="text/css" href="<?php echo base_url();?>assets/thirdparty/easyui/themes/icon.css">
     <script type="text/javascript" src="<?php echo base_url();?>assets/thirdparty/easyui/jquery.easyui.min.js"></script>
-	<script src="<?php echo base_url();?>assets/scripts/triunejrs.js"></script>
+	<link rel="stylesheet" href="<?php echo base_url();?>assets/stylesheets/triune.css" />
 
 
-    <div style="margin:20px 0;"></div>
-    <div class="easyui-panel" title="Create Request" style="width:100%;max-width:400px;padding:30px 60px;">
+    <div style="margin:5px 0;"></div>
+    <div class="easyui-panel" title="Create Request" style="width:100%;max-width:50%;padding:5px 5px;">
         <form id="ff" class="easyui-form" method="post" data-options="novalidate:true">
-            <div style="margin-bottom:20px">
-                <input class="easyui-textbox" name="name" style="width:100%" data-options="label:'Name:',required:true">
+            <div style="margin-bottom:5px">
+                <div style="margin-bottom:1px" >
+                    <input class="easyui-combobox" name="location" style="width:100%;" data-options="
+                            url:'getLocation',
+                            method:'get',
+                            valueField:'locationCode',
+                            textField:'locationDescription',
+                            panelHeight:'auto',
+                            prompt: 'LOCATION:',
+                            ">
+                </div>
+
+
+                <div style="margin-bottom:1px" class="two-column-30">
+                    <input class="easyui-combobox" name="floor" style="width:70%;" data-options="
+                            url:'getFloor',
+                            method:'get',
+                            valueField:'floor',
+                            textField:'floor',
+                            panelHeight:'auto',
+                            prompt: 'FLOOR:',
+                            ">
+                </div>
+
+
+                <div style="margin-bottom:1px" class="two-column-70">
+                    <input class="easyui-combobox" name="room" style="width:100%;" data-options="
+                            url:'getRoom',
+                            method:'get',
+                            valueField:'roomNumber',
+                            textField:'roomDescription',
+                            panelHeight:'auto',
+                            prompt: 'ROOM:',
+                            ">
+                </div>
+
             </div>
-            <div style="margin-bottom:20px">
-                <input class="easyui-textbox" name="email" style="width:100%" data-options="label:'Email:',required:true,validType:'email'">
+            <div style="margin-bottom:1px">
+                <input class="easyui-textbox" name="projectTitle" style="width:100%" data-options="prompt:'PROJECT TITLE:',required:true">
+
             </div>
-            <div style="margin-bottom:20px">
-                <input class="easyui-textbox" name="subject" style="width:100%" data-options="label:'Subject:',required:true">
+            <div style="margin-bottom:1px" class="two-column">
+                <input class="easyui-textbox" name="scopeOfWorks" style="width:100%;height:100px" data-options="prompt:'SCOPE OF WORKS:', multiline:true">
             </div>
-            <div style="margin-bottom:20px">
-                <input class="easyui-textbox" name="message" style="width:100%;height:60px" data-options="label:'Message:',multiline:true">
+            <div style="margin-bottom:1px" class="two-column">
+                <input class="easyui-textbox" name="projectJustification" style="width:100%;height:100px" data-options="prompt:'PROJECT JUSTIFICATION, NOTES, AND COMMENTS:',multiline:true">
             </div>
-            <div style="margin-bottom:20px">
-                <select class="easyui-combobox" name="language" label="Language" style="width:100%"><option value="ar">Arabic</option><option value="bg">Bulgarian</option><option value="ca">Catalan</option><option value="zh-cht">Chinese Traditional</option><option value="cs">Czech</option><option value="da">Danish</option><option value="nl">Dutch</option><option value="en" selected="selected">English</option><option value="et">Estonian</option><option value="fi">Finnish</option><option value="fr">French</option><option value="de">German</option><option value="el">Greek</option><option value="ht">Haitian Creole</option><option value="he">Hebrew</option><option value="hi">Hindi</option><option value="mww">Hmong Daw</option><option value="hu">Hungarian</option><option value="id">Indonesian</option><option value="it">Italian</option><option value="ja">Japanese</option><option value="ko">Korean</option><option value="lv">Latvian</option><option value="lt">Lithuanian</option><option value="no">Norwegian</option><option value="fa">Persian</option><option value="pl">Polish</option><option value="pt">Portuguese</option><option value="ro">Romanian</option><option value="ru">Russian</option><option value="sk">Slovak</option><option value="sl">Slovenian</option><option value="es">Spanish</option><option value="sv">Swedish</option><option value="th">Thai</option><option value="tr">Turkish</option><option value="uk">Ukrainian</option><option value="vi">Vietnamese</option></select>
+
+            <div style="margin-bottom:1px" class="two-column">
+           
+                <input id="f1" class="easyui-filebox" name="file1" style="width:100%" data-options="
+                    prompt:'Choose an image...',
+                    onChange: function(value){
+                        var f = $(this).next().find('input[type=file]')[0];
+                        if (f.files && f.files[0]){
+                            var reader = new FileReader();
+                            reader.onload = function(e){
+                                $('#image1').attr('src', e.target.result);
+                            }
+                            reader.readAsDataURL(f.files[0]);
+                        }
+                    }">     
+                    <img id="image1" style="width:25%"/>       
             </div>
+            <div style="margin-bottom:1px" class="two-column">
+                <input class="easyui-filebox"  data-options="prompt:'Choose a file...'" style="width:100%">           
+            </div>
+           
+            <div style="margin-bottom:1px" class="two-column">
+                <input class="easyui-datebox" prompt="DATE NEEDED:" data-options="formatter:myformatter,parser:myparser" style="width:100%;">
+            </div>
+            <div style="margin-bottom:1px" class="two-column">
+            </div>
+
+
         </form>
         <div style="text-align:center;padding:5px 0">
             <a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitForm()" style="width:80px">Submit</a>
             <a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()" style="width:80px">Clear</a>
         </div>
     </div>
- 
+
+
+
     <script>
         function submitForm(){
             $('#ff').form('submit',{
@@ -40,4 +104,40 @@
         function clearForm(){
             $('#ff').form('clear');
         }
+
+        function myformatter(date){
+            var y = date.getFullYear();
+            var m = date.getMonth()+1;
+            var d = date.getDate();
+            return y+'-'+(m<10?('0'+m):m)+'-'+(d<10?('0'+d):d);
+        }
+        function myparser(s){
+            if (!s) return new Date();
+            var ss = (s.split('-'));
+            var y = parseInt(ss[0],10);
+            var m = parseInt(ss[1],10);
+            var d = parseInt(ss[2],10);
+            if (!isNaN(y) && !isNaN(m) && !isNaN(d)){
+                return new Date(y,m-1,d);
+            } else {
+                return new Date();
+            }
+        }
+
     </script>
+
+ <!--      <div class="easyui-panel" title="Nested Panel" style="width:700px;height:200px;padding:10px;">
+        <div class="easyui-layout" data-options="fit:true">
+            <div data-options="region:'west',split:true, border:false" style="width:100px;padding:10px">
+                Left Content
+            </div>
+            <div data-options="region:'east'" style="width:100px;padding:10px">
+                Right Content
+            </div>
+            <div data-options="region:'center'" style="padding:10px">
+                Center Content
+            </div>
+        </div>
+    </div> -->
+
+</div>

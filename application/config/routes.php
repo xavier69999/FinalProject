@@ -59,6 +59,9 @@ $route['auth/hello'] = 'triuneAuth/index';
 $route['main'] = 'triuneAuth/mainView';
 $route['main/jobRequest'] = 'triuneMain/jobRequest';
 $route['bamjrs/create'] = 'triuneJRS/BAMCreateRequest';
+$route['getLocation'] = 'triuneData/getLocation'; 
+$route['getFloor'] = 'triuneData/getFloor'; 
+$route['getRoom'] = 'triuneData/getRoom'; 
 
 
 $route['404_override'] = '';

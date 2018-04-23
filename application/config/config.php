@@ -23,7 +23,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | a PHP script and you can easily do that on your own.
 |
 */
-$domainName = $_SERVER['SERVER_ADDR'];
+//$domainName = $_SERVER['SERVER_ADDR'];
+$domainName = "localhost";
 $config['base_url'] = 'http://' . $domainName . '/myTriune/';
 $config['server_root'] = $_SERVER['DOCUMENT_ROOT'];
 

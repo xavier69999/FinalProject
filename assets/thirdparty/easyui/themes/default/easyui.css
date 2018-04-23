@@ -826,7 +826,7 @@
 }
 .textbox .textbox-prompt {
   font-size: 12px;
-  color: #aaa;
+  color: rgb(10, 10, 10);
 }
 .textbox .textbox-bgicon {
   background-position: 3px center;

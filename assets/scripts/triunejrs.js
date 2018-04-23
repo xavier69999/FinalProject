@@ -3,9 +3,14 @@ $(document).ready(function(){
     $('div[select-item]').on('click', function(e){
         e.preventDefault();
         var pageRef = $(this).attr('select-item');
+        removeDOMForm();
         callItem(pageRef);
     });
 
+    function removeDOMForm() {
+        $('div.requestForm').remove();
+        $('div.combo-p').remove();
+    }
 
     function callItem(pageRefInput) {
         $.ajax({

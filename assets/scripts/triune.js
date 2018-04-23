@@ -9,6 +9,8 @@ $(document).ready(function(){
 
     function removeDOM() {
         $('div.requestMenu').remove();
+        $('div.requestForm').remove();
+        $('div.combo-p').remove();
 
     }
 
