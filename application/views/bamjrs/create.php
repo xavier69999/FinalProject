@@ -11,78 +11,65 @@
         <form id="ff" class="easyui-form" method="post" data-options="novalidate:true">
             <div style="margin-bottom:5px">
                 <div style="margin-bottom:1px" >
-                    <input class="easyui-combobox" name="location" style="width:100%;" data-options="
+                    <input class="easyui-combobox" name="location" id="location" style="width:100%;" prompt="LOCATION:" data-options="
                             url:'getLocation',
                             method:'get',
                             valueField:'locationCode',
                             textField:'locationDescription',
+                            onSelect: function(rec){
+                                var url = 'getFloor?locationCode='+rec.locationCode;
+                                console.log( $('#floor').attr('prompt'));
+                                $('#floor').combobox('reload', url);
+                                clearForm();
+                            },
                             panelHeight:'auto',
-                            prompt: 'LOCATION:',
+                            required:true
                             ">
                 </div>
 
 
                 <div style="margin-bottom:1px" class="two-column-30">
-                    <input class="easyui-combobox" name="floor" style="width:70%;" data-options="
-                            url:'getFloor',
-                            method:'get',
+                    <input class="easyui-combobox" name="floor" id="floor" style="width:70%;" prompt="FLOOR:" data-options="
                             valueField:'floor',
                             textField:'floor',
+                            onSelect: function(rec){
+                                var url = 'getRoom?floor='+rec.floor+'&locationCode='+rec.locationCode;
+                                $('#room').combobox('reload', url);
+                                $('#room').textbox('clear');
+                            },
+                            
                             panelHeight:'auto',
-                            prompt: 'FLOOR:',
+                            required:true
                             ">
                 </div>
 
 
                 <div style="margin-bottom:1px" class="two-column-70">
-                    <input class="easyui-combobox" name="room" style="width:100%;" data-options="
-                            url:'getRoom',
-                            method:'get',
+                    <input class="easyui-combobox" name="room" id="room" style="width:100%;" data-options="
                             valueField:'roomNumber',
                             textField:'roomDescription',
                             panelHeight:'auto',
                             prompt: 'ROOM:',
+                            required:true
                             ">
                 </div>
 
             </div>
             <div style="margin-bottom:1px">
-                <input class="easyui-textbox" name="projectTitle" style="width:100%" data-options="prompt:'PROJECT TITLE:',required:true">
+                <input class="easyui-textbox" name="projectTitle" id="projectTitle"  style="width:100%" data-options="prompt:'PROJECT TITLE:',required:true">
 
             </div>
             <div style="margin-bottom:1px" class="two-column">
-                <input class="easyui-textbox" name="scopeOfWorks" style="width:100%;height:100px" data-options="prompt:'SCOPE OF WORKS:', multiline:true">
+                <input class="easyui-textbox" name="scopeOfWorks" id="scopeOfWorks" style="width:100%;height:100px" data-options="prompt:'SCOPE OF WORKS:', multiline:true ,required:true">
             </div>
             <div style="margin-bottom:1px" class="two-column">
-                <input class="easyui-textbox" name="projectJustification" style="width:100%;height:100px" data-options="prompt:'PROJECT JUSTIFICATION, NOTES, AND COMMENTS:',multiline:true">
+                <input class="easyui-textbox" name="projectJustification" id="projectJustification" style="width:100%;height:100px" data-options="prompt:'PROJECT JUSTIFICATION, NOTES, AND COMMENTS:',multiline:true,required:true">
             </div>
 
             <div style="margin-bottom:1px" class="two-column">
-           
-                <input id="f1" class="easyui-filebox" name="file1" style="width:100%" data-options="
-                    prompt:'Choose an image...',
-                    onChange: function(value){
-                        var f = $(this).next().find('input[type=file]')[0];
-                        if (f.files && f.files[0]){
-                            var reader = new FileReader();
-                            reader.onload = function(e){
-                                $('#image1').attr('src', e.target.result);
-                            }
-                            reader.readAsDataURL(f.files[0]);
-                        }
-                    }">     
-                    <img id="image1" style="width:25%"/>       
-            </div>
-            <div style="margin-bottom:1px" class="two-column">
-                <input class="easyui-filebox"  data-options="prompt:'Choose a file...'" style="width:100%">           
+                <input class="easyui-datebox" prompt="DATE NEEDED:" id="dateNeeded" data-options="formatter:myformatter,parser:myparser,required:true" style="width:100%;">
             </div>
            
-            <div style="margin-bottom:1px" class="two-column">
-                <input class="easyui-datebox" prompt="DATE NEEDED:" data-options="formatter:myformatter,parser:myparser" style="width:100%;">
-            </div>
-            <div style="margin-bottom:1px" class="two-column">
-            </div>
-
 
         </form>
         <div style="text-align:center;padding:5px 0">
@@ -97,11 +84,42 @@
         function submitForm(){
             $('#ff').form('submit',{
                 onSubmit:function(){
-                    return $(this).form('enableValidation').form('validate');
+                    var validForm =  $(this).form('enableValidation').form('validate');
+                    if(!validForm) {
+                        return validForm;
+                    } else {
+                        var location = $('#location').val();
+                        var floor = $('#floor').val();
+                        var room = $('#room').val();
+                        var projectTitle = $('#projectTitle').val();
+                        var scopeOfWorks = $('#scopeOfWorks').val();
+                        var projectJustification = $('#projectJustification').val();
+                        var dateNeeded = $('#dateNeeded').val();
+
+                        console.log(location);
+                        jQuery.ajax({
+                            url: "setRequestBAM",
+                            data:'location='+location+'&floor='+floor+'&room='+room+'&projectTitle='+projectTitle+'&scopeOfWorks='+scopeOfWorks+'&projectJustification='+projectJustification+'&dateNeeded='+dateNeeded,
+                            type: "POST",
+                            success:function(data){
+                                console.log('DATA');
+                                console.log(data);
+                                if(data == 0) {
+                                    alert('0');
+                                    return false;
+                                }
+
+                            },
+                                error:function (){}
+                        });
+                    }
+
                 }
             });
         }
+    
         function clearForm(){
+            console.log($('#ff').form());
             $('#ff').form('clear');
         }
 

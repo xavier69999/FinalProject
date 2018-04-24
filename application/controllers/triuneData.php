@@ -20,38 +20,76 @@ class triuneData extends MY_Controller {
     function __construct() {
         parent::__construct();
 		$this->load->library('session');
+        $this->load->library('form_validation'); 
     }//function __construct()
 
 
     public function getLocation() {
-		$userRecord = $this->_getRecordsData($data = array('locationCode', 'locationDescription'), 
+		$results = $this->_getRecordsData($data = array('locationCode', 'locationDescription'), 
 			$tables = array('triune_location'), $fieldName = null, $where = null, $join = null, $joinType = null, 
 			$sortBy = array('locationDescription'), $sortOrder = array('asc'), $limit = null, 
 			$fieldNameLike = null, $like = null, 
 			$whereSpecial = null, $groupBy = null );
 
-			echo json_encode($userRecord);
+			echo json_encode($results);
 	}
 
     public function getFloor() {
-		$userRecord = $this->_getRecordsData($data = array('floor'), 
-			$tables = array('triune_rooms'), $fieldName = null, $where = null, $join = null, $joinType = null, 
+		$locationCode = $_GET["locationCode"];
+		//echo $locationCode;
+		$results = $this->_getRecordsData($data = array('floor', 'locationCode'), 
+			$tables = array('triune_rooms'), $fieldName = array('locationCode'), $where = array($locationCode), $join = null, $joinType = null, 
 			$sortBy = array('floor'), $sortOrder = array('asc'), $limit = null, 
 			$fieldNameLike = null, $like = null, 
 			$whereSpecial = null, $groupBy = null );
 
-			echo json_encode($userRecord);
+			echo json_encode($results);
 	}
 
 	public function getRoom() {
-		$userRecord = $this->_getRecordsData($data = array('roomNumber', 'roomDescription'), 
-			$tables = array('triune_rooms'), $fieldName = null, $where = null, $join = null, $joinType = null, 
+		$floor = $_GET["floor"];
+		$locationCode = $_GET["locationCode"];
+
+		$results = $this->_getRecordsData($data = array('roomNumber', 'roomDescription'), 
+			$tables = array('triune_rooms'), $fieldName = array('floor', 'locationCode'), $where = array($floor, $locationCode), $join = null, $joinType = null, 
 			$sortBy = array('roomNumber'), $sortOrder = array('asc'), $limit = null, 
 			$fieldNameLike = null, $like = null, 
 			$whereSpecial = null, $groupBy = null );
 
-			echo json_encode($userRecord);
+			echo json_encode($results);
 	}
 
 
+	public function setRequestBAM() {
+
+		$this->form_validation->set_rules('location', 'Location', 'required|alpha_numeric');
+		$this->form_validation->set_rules('floor', 'Floor', 'required|alpha_numeric');  
+		$this->form_validation->set_rules('room', 'Room', 'required');    
+		$this->form_validation->set_rules('scopeOfWorks', 'Scope of Works', 'required');    
+		$this->form_validation->set_rules('projectJustification', 'Project Justification', 'required');    
+		$this->form_validation->set_rules('dateNeeded', 'Date Needed', 'required|regex_match[/\d{4}\-\d{2}-\d{2}/]');    
+
+		$location = $_POST["location"];
+		$floor = $_POST["floor"];
+		$room = $_POST["room"];
+		$scopeOfWorks = $_POST["scopeOfWorks"];
+		$projectJustification = $_POST["projectJustification"];
+		$dateNeeded = $_POST["dateNeeded"];
+
+		$this->session->set_flashdata('location', $location);
+		$this->session->set_flashdata('floor', $floor);
+		$this->session->set_flashdata('room', $room);
+		$this->session->set_flashdata('scopeOfWorks', $scopeOfWorks);
+		$this->session->set_flashdata('projectJustification', $projectJustification);
+		$this->session->set_flashdata('dateNeeded', $dateNeeded);
+
+
+		if ($this->form_validation->run() == FALSE) {   
+			echo json_encode($this->form_validation->error_array());
+		}else{    
+
+			echo "HIT!";
+		}	
+
+	}
 }

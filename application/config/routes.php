@@ -62,6 +62,7 @@ $route['bamjrs/create'] = 'triuneJRS/BAMCreateRequest';
 $route['getLocation'] = 'triuneData/getLocation'; 
 $route['getFloor'] = 'triuneData/getFloor'; 
 $route['getRoom'] = 'triuneData/getRoom'; 
+$route['setRequestBAM'] = 'triuneData/setRequestBAM'; 
 
 
 $route['404_override'] = '';
