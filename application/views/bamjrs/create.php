@@ -19,8 +19,11 @@
                             onSelect: function(rec){
                                 var url = 'getFloor?locationCode='+rec.locationCode;
                                 console.log( $('#floor').attr('prompt'));
+                                $('#room').textbox('clear');
+                                $('#floor').textbox('clear');
                                 $('#floor').combobox('reload', url);
-                                clearForm();
+                                $('#room').combobox('reload', url);
+ 
                             },
                             panelHeight:'auto',
                             required:true
@@ -34,8 +37,8 @@
                             textField:'floor',
                             onSelect: function(rec){
                                 var url = 'getRoom?floor='+rec.floor+'&locationCode='+rec.locationCode;
-                                $('#room').combobox('reload', url);
                                 $('#room').textbox('clear');
+                                $('#room').combobox('reload', url);
                             },
                             
                             panelHeight:'auto',
@@ -61,15 +64,17 @@
             </div>
             <div style="margin-bottom:1px" class="two-column">
                 <input class="easyui-textbox" name="scopeOfWorks" id="scopeOfWorks" style="width:100%;height:100px" data-options="prompt:'SCOPE OF WORKS:', multiline:true ,required:true">
+
             </div>
             <div style="margin-bottom:1px" class="two-column">
                 <input class="easyui-textbox" name="projectJustification" id="projectJustification" style="width:100%;height:100px" data-options="prompt:'PROJECT JUSTIFICATION, NOTES, AND COMMENTS:',multiline:true,required:true">
+
             </div>
 
             <div style="margin-bottom:1px" class="two-column">
                 <input class="easyui-datebox" prompt="DATE NEEDED:" id="dateNeeded" data-options="formatter:myformatter,parser:myparser,required:true" style="width:100%;">
+
             </div>
-           
 
         </form>
         <div style="text-align:center;padding:5px 0">
@@ -78,10 +83,21 @@
         </div>
     </div>
 
+    <div class="error-message">
+        <p id="location-error" class="error-message" > </p>
+        <p id="room-error" class="error-message" > </p>
+        <p id="floor-error" class="error-message" > </p>
+        <p id="project-title-error" class="error-message" > </p>
+        <p id="scope-of-works-error" class="error-message" > </p>
+        <p id="project-justification-error" class="error-message" > </p>
+        <p id="date-needed-error" class="error-message" > </p>
+
+    </div>
 
 
     <script>
         function submitForm(){
+
             $('#ff').form('submit',{
                 onSubmit:function(){
                     var validForm =  $(this).form('enableValidation').form('validate');
@@ -96,17 +112,55 @@
                         var projectJustification = $('#projectJustification').val();
                         var dateNeeded = $('#dateNeeded').val();
 
-                        console.log(location);
                         jQuery.ajax({
                             url: "setRequestBAM",
                             data:'location='+location+'&floor='+floor+'&room='+room+'&projectTitle='+projectTitle+'&scopeOfWorks='+scopeOfWorks+'&projectJustification='+projectJustification+'&dateNeeded='+dateNeeded,
                             type: "POST",
                             success:function(data){
-                                console.log('DATA');
-                                console.log(data);
-                                if(data == 0) {
-                                    alert('0');
+                                
+                                if(data == 1) {
+                                    console.log('success');
+                                    clearErrorMessages();
+                                    return true;
+                                } else {
+
+                                    var obj = $.parseJSON(data);
+                                    var dateNeeded = obj['dateNeeded'];
+                                    var room = obj['room'];
+                                    var floor = obj['floor'];
+                                    var location = obj['location'];
+                                    var scopeOfWorks = obj['scopeOfWorks'];
+                                    var projectJustification = obj['projectJustification'];
+                                    var projectTitle = obj['projectTitle'];
+                                    var locationNotExist = obj['locationNotExist'];
+console.log("hello");
+console.log(locationNotExist);
+
+                                    if(dateNeeded != "undefined") {
+                                        $('#date-needed-error').html(dateNeeded);
+                                    }
+                                    if(room != "undefined") {
+                                        $('#room-error').html(room);
+                                    }
+                                    if(floor != "undefined") {
+                                        $('#floor-error').html(floor);
+                                    }
+                                    if(location != "undefined") {
+                                        $('#location-error').html(location);
+                                    }
+                                    if(scopeOfWorks != "undefined") {
+                                        $('#scope-of-works-error').html(scopeOfWorks);
+                                    }
+                                    if(projectJustification != "undefined") {
+                                        $('#project-justification-error').html(projectJustification);
+                                    }
+                                    if(projectTitle != "undefined") {
+                                        $('#project-title-error').html(projectTitle);
+                                    }
+
+
                                     return false;
+
                                 }
 
                             },
@@ -122,6 +176,11 @@
             console.log($('#ff').form());
             $('#ff').form('clear');
         }
+
+        function clearErrorMessages() {
+            $('p.error-message').html('');
+        }
+
 
         function myformatter(date){
             var y = date.getFullYear();
@@ -144,18 +203,5 @@
 
     </script>
 
- <!--      <div class="easyui-panel" title="Nested Panel" style="width:700px;height:200px;padding:10px;">
-        <div class="easyui-layout" data-options="fit:true">
-            <div data-options="region:'west',split:true, border:false" style="width:100px;padding:10px">
-                Left Content
-            </div>
-            <div data-options="region:'east'" style="width:100px;padding:10px">
-                Right Content
-            </div>
-            <div data-options="region:'center'" style="padding:10px">
-                Center Content
-            </div>
-        </div>
-    </div> -->
 
 </div>

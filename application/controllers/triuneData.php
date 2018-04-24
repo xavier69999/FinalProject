@@ -88,7 +88,32 @@ class triuneData extends MY_Controller {
 			echo json_encode($this->form_validation->error_array());
 		}else{    
 
-			echo "HIT!";
+			$resultsLoc = $this->_getRecordsData($data = array('locationCode'), 
+			$tables = array('triune_location'), $fieldName = array('locationCode'), $where = array($location), 
+			$join = null, $joinType = null, $sortBy = null, $sortOrder = array('asc'), 
+			$limit = null, 	$fieldNameLike = null, $like = null, $whereSpecial = null, $groupBy = null );
+
+			$resultsRm = $this->_getRecordsData($data = array('roomNumber', 'roomDescription'), 
+			$tables = array('triune_rooms'), $fieldName = array('roomNumber'), $where = array($room), 
+			$join = null, $joinType = null, $sortBy = null, $sortOrder = null, 
+			$limit = null, 	$fieldNameLike = null, $like = null, $whereSpecial = null, $groupBy = null );
+
+			$resultsFlr = $this->_getRecordsData($data = array('roomNumber', 'roomDescription'), 
+			$tables = array('triune_rooms'), $fieldName = array('floor'), $where = array($floor), 
+			$join = null, $joinType = null, $sortBy = null, $sortOrder = null, 
+			$limit = null, 	$fieldNameLike = null, $like = null, $whereSpecial = null, $groupBy = null );
+
+			if(empty($resultsLoc)) {
+				echo "{'locationNotExist' : 'location not exist!'}";
+			} elseif(empty($resultsRm)) {
+				echo "{'roomNotExist' : 'room not exist!'}";
+			} elseif(empty($resultsFlr)) {
+				echo "{'floorNotExist' : 'floor not exist!'}";
+			} else {
+				echo 1;
+			}
+
+			
 		}	
 
 	}
