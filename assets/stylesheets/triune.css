@@ -6,11 +6,11 @@ DATE CREATED: March 8, 2018
 DATE UPDATED: March 9, 2018
 --------------------------------------------------------------------*/
 
-div.error-message {
+div#error-messages {
     color:red; 
-    padding: .5em; 
-    font-size:.7em; 
+    font-size:.8em;
     font-family: Arial, Helvetica, sans-serif; 
+    font-style: italic;
 }
 
 img.progressImageRight {

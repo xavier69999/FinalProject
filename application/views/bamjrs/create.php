@@ -7,11 +7,11 @@
 
 
     <div style="margin:5px 0;"></div>
-    <div class="easyui-panel" title="Create Request" style="width:100%;max-width:50%;padding:5px 5px;">
+    <div class="easyui-panel" title="Create Request" style="width:100%;max-width:50%;padding:5px 5px;"> 
         <form id="ff" class="easyui-form" method="post" data-options="novalidate:true">
             <div style="margin-bottom:5px">
                 <div style="margin-bottom:1px" >
-                    <input class="easyui-combobox" name="location" id="location" style="width:100%;" prompt="LOCATION:" data-options="
+                    <input class="easyui-combobox" name="location" id="location" style="width:100%" prompt="LOCATION:" data-options="
                             url:'getLocation',
                             method:'get',
                             valueField:'locationCode',
@@ -23,7 +23,6 @@
                                 $('#floor').textbox('clear');
                                 $('#floor').combobox('reload', url);
                                 $('#room').combobox('reload', url);
- 
                             },
                             panelHeight:'auto',
                             required:true
@@ -83,17 +82,7 @@
         </div>
     </div>
 
-    <div class="error-message">
-        <p id="location-error" class="error-message" > </p>
-        <p id="room-error" class="error-message" > </p>
-        <p id="floor-error" class="error-message" > </p>
-        <p id="project-title-error" class="error-message" > </p>
-        <p id="scope-of-works-error" class="error-message" > </p>
-        <p id="project-justification-error" class="error-message" > </p>
-        <p id="date-needed-error" class="error-message" > </p>
-
-    </div>
-
+   <div id="error-messages"> </div>
 
     <script>
         function submitForm(){
@@ -120,6 +109,8 @@
                                 
                                 if(data == 1) {
                                     console.log('success');
+                                    $('div#location-div').html('');
+
                                     clearErrorMessages();
                                     return true;
                                 } else {
@@ -133,32 +124,47 @@
                                     var projectJustification = obj['projectJustification'];
                                     var projectTitle = obj['projectTitle'];
                                     var locationNotExist = obj['locationNotExist'];
-console.log("hello");
-console.log(locationNotExist);
+                                    var floorNotExist = obj['floorNotExist'];
+                                    var roomNotExist = obj['roomNotExist'];
 
-                                    if(dateNeeded != "undefined") {
-                                        $('#date-needed-error').html(dateNeeded);
-                                    }
-                                    if(room != "undefined") {
-                                        $('#room-error').html(room);
-                                    }
-                                    if(floor != "undefined") {
-                                        $('#floor-error').html(floor);
-                                    }
-                                    if(location != "undefined") {
-                                        $('#location-error').html(location);
-                                    }
-                                    if(scopeOfWorks != "undefined") {
-                                        $('#scope-of-works-error').html(scopeOfWorks);
-                                    }
-                                    if(projectJustification != "undefined") {
-                                        $('#project-justification-error').html(projectJustification);
-                                    }
-                                    if(projectTitle != "undefined") {
-                                        $('#project-title-error').html(projectTitle);
+                                    $notExistMessage = '';
+                                    if(locationNotExist != undefined) {
+                                        $notExistMessage =  $notExistMessage + locationNotExist + "<br>";
                                     }
 
+                                    if(floorNotExist != undefined) {
+                                        $notExistMessage =  $notExistMessage + floorNotExist + "<br>";
+                                    } 
+                                    if(roomNotExist != undefined) {
+                                        $notExistMessage =  $notExistMessage + roomNotExist + "<br>";
+                                    } 
 
+                                    if(dateNeeded != undefined) {
+                                        $notExistMessage =  $notExistMessage + dateNeeded + "<br>";
+                                    } 
+                                    if(room != undefined) {
+                                        $notExistMessage =  $notExistMessage + room + "<br>";
+                                    } 
+                                    if(floor != undefined) {
+                                        $notExistMessage =  $notExistMessage + floor + "<br>";
+                                    } 
+                                    if(location != undefined) {
+                                        $notExistMessage =  $notExistMessage + location + "<br>";
+                                    } 
+                                    if(scopeOfWorks != undefined) {
+                                        $notExistMessage =  $notExistMessage + scopeOfWorks + "<br>";
+                                    } 
+
+                                    if(projectJustification != undefined) {
+                                        $notExistMessage =  $notExistMessage + projectJustification + "<br>";
+                                    } 
+
+                                    if(projectTitle != undefined) {
+                                        $notExistMessage =  $notExistMessage + projectTitle + "<br>";
+                                    } 
+
+                                    $('div#error-messages').html($notExistMessage);
+                                    
                                     return false;
 
                                 }
@@ -178,7 +184,7 @@ console.log(locationNotExist);
         }
 
         function clearErrorMessages() {
-            $('p.error-message').html('');
+            $('div#error-messages').html('');
         }
 
 

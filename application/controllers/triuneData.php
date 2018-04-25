@@ -103,15 +103,26 @@ class triuneData extends MY_Controller {
 			$join = null, $joinType = null, $sortBy = null, $sortOrder = null, 
 			$limit = null, 	$fieldNameLike = null, $like = null, $whereSpecial = null, $groupBy = null );
 
+			$notExistMessage = array();
 			if(empty($resultsLoc)) {
-				echo "{'locationNotExist' : 'location not exist!'}";
-			} elseif(empty($resultsRm)) {
-				echo "{'roomNotExist' : 'room not exist!'}";
-			} elseif(empty($resultsFlr)) {
-				echo "{'floorNotExist' : 'floor not exist!'}";
-			} else {
+				$notExistMessage["locationNotExist"] = "no reference for location in the database!";
+			} 
+			
+			if(empty($resultsRm)) {
+				$notExistMessage["roomNotExist"] = "no reference for room in the database!";
+
+			} 
+			
+			if(empty($resultsFlr)) {
+				$notExistMessage["floorNotExist"] = "no reference for floor in the database!";
+
+			} 
+			if(count($notExistMessage) > 0) {
+				echo json_encode($notExistMessage);
+			} elseif(count($notExistMessage) == 0) {
 				echo 1;
 			}
+			
 
 			
 		}	
