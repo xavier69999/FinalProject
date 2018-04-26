@@ -24,7 +24,7 @@ class triuneData extends MY_Controller {
     }//function __construct()
 
 
-    public function getLocation() {
+    public function getLocationCode() {
 		$results = $this->_getRecordsData($data = array('locationCode', 'locationDescription'), 
 			$tables = array('triune_location'), $fieldName = null, $where = null, $join = null, $joinType = null, 
 			$sortBy = array('locationDescription'), $sortOrder = array('asc'), $limit = null, 
@@ -46,7 +46,7 @@ class triuneData extends MY_Controller {
 			echo json_encode($results);
 	}
 
-	public function getRoom() {
+	public function getRoomNumber() {
 		$floor = $_GET["floor"];
 		$locationCode = $_GET["locationCode"];
 
@@ -62,23 +62,26 @@ class triuneData extends MY_Controller {
 
 	public function setRequestBAM() {
 
-		$this->form_validation->set_rules('location', 'Location', 'required|alpha_numeric');
+		$this->form_validation->set_rules('locationCode', 'Location Code', 'required|alpha_numeric');
 		$this->form_validation->set_rules('floor', 'Floor', 'required|alpha_numeric');  
-		$this->form_validation->set_rules('room', 'Room', 'required');    
+		$this->form_validation->set_rules('roomNumber', 'Room Number', 'required');    
+		$this->form_validation->set_rules('projectTitle', 'Project Title', 'required');    
 		$this->form_validation->set_rules('scopeOfWorks', 'Scope of Works', 'required');    
 		$this->form_validation->set_rules('projectJustification', 'Project Justification', 'required');    
 		$this->form_validation->set_rules('dateNeeded', 'Date Needed', 'required|regex_match[/\d{4}\-\d{2}-\d{2}/]');    
 
-		$location = $_POST["location"];
+		$locationCode = $_POST["locationCode"];
 		$floor = $_POST["floor"];
-		$room = $_POST["room"];
+		$roomNumber = $_POST["roomNumber"];
+		$projectTitle = $_POST["projectTitle"];
 		$scopeOfWorks = $_POST["scopeOfWorks"];
 		$projectJustification = $_POST["projectJustification"];
 		$dateNeeded = $_POST["dateNeeded"];
 
-		$this->session->set_flashdata('location', $location);
+		$this->session->set_flashdata('locationCode', $locationCode);
 		$this->session->set_flashdata('floor', $floor);
-		$this->session->set_flashdata('room', $room);
+		$this->session->set_flashdata('roomNumber', $roomNumber);
+		$this->session->set_flashdata('projectTitle', $projectTitle);
 		$this->session->set_flashdata('scopeOfWorks', $scopeOfWorks);
 		$this->session->set_flashdata('projectJustification', $projectJustification);
 		$this->session->set_flashdata('dateNeeded', $dateNeeded);
@@ -89,12 +92,12 @@ class triuneData extends MY_Controller {
 		}else{    
 
 			$resultsLoc = $this->_getRecordsData($data = array('locationCode'), 
-			$tables = array('triune_location'), $fieldName = array('locationCode'), $where = array($location), 
+			$tables = array('triune_location'), $fieldName = array('locationCode'), $where = array($locationCode), 
 			$join = null, $joinType = null, $sortBy = null, $sortOrder = array('asc'), 
 			$limit = null, 	$fieldNameLike = null, $like = null, $whereSpecial = null, $groupBy = null );
 
 			$resultsRm = $this->_getRecordsData($data = array('roomNumber', 'roomDescription'), 
-			$tables = array('triune_rooms'), $fieldName = array('roomNumber'), $where = array($room), 
+			$tables = array('triune_rooms'), $fieldName = array('roomNumber'), $where = array($roomNumber), 
 			$join = null, $joinType = null, $sortBy = null, $sortOrder = null, 
 			$limit = null, 	$fieldNameLike = null, $like = null, $whereSpecial = null, $groupBy = null );
 
@@ -105,21 +108,40 @@ class triuneData extends MY_Controller {
 
 			$notExistMessage = array();
 			if(empty($resultsLoc)) {
-				$notExistMessage["locationNotExist"] = "no reference for location in the database!";
+				$notExistMessage["locationCodeNotExist"] = "No reference for location codes in the database!";
 			} 
 			
 			if(empty($resultsRm)) {
-				$notExistMessage["roomNotExist"] = "no reference for room in the database!";
+				$notExistMessage["roomNumberNotExist"] = "No reference for room numbers in the database!";
 
 			} 
 			
 			if(empty($resultsFlr)) {
-				$notExistMessage["floorNotExist"] = "no reference for floor in the database!";
+				$notExistMessage["floorNotExist"] = "No reference for floor in the database!";
 
 			} 
 			if(count($notExistMessage) > 0) {
 				echo json_encode($notExistMessage);
 			} elseif(count($notExistMessage) == 0) {
+
+				$insertData = null;
+				$insertData = array(
+					  'locationCode' => $locationCode,
+					  'floor' => $floor,
+					  'roomNumber' => $roomNumber,
+					  'projectTitle' => $projectTitle,
+					  'scopeOfWorks' => $scopeOfWorks, 
+					  'projectJustification' => $projectJustification,
+					  'requestStatus' => $this->_getRequestStatus('NEW', 'BAM'),
+					  'dateNeeded' => $dateNeeded,
+					  'dateCreated' => $this->_getCurrentDate(),
+					  'userName' => $this->_getUserName(1),
+					  'workstationID' => $this->_getIPAddress(),
+					  'timeStamp' => $this->_getTimeStamp(),
+			  );				 
+					  
+			  $this->_insertRecords($tableName = 'triune_job_request_transaction_bam', $insertData);        			 
+	 
 				echo 1;
 			}
 			

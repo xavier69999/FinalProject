@@ -29,7 +29,6 @@ class triuneAuth extends MY_Controller {
 
 
     public function index() {
-		echo "HOME";
 		$this->_sendSMS();
     }
 

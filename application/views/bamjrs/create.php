@@ -11,18 +11,18 @@
         <form id="ff" class="easyui-form" method="post" data-options="novalidate:true">
             <div style="margin-bottom:5px">
                 <div style="margin-bottom:1px" >
-                    <input class="easyui-combobox" name="location" id="location" style="width:100%" prompt="LOCATION:" data-options="
-                            url:'getLocation',
+                    <input class="easyui-combobox" name="locationCode" id="locationCode" style="width:100%" prompt="LOCATION:" data-options="
+                            url:'getLocationCode',
                             method:'get',
                             valueField:'locationCode',
                             textField:'locationDescription',
                             onSelect: function(rec){
                                 var url = 'getFloor?locationCode='+rec.locationCode;
                                 console.log( $('#floor').attr('prompt'));
-                                $('#room').textbox('clear');
+                                $('#roomNumber').textbox('clear');
                                 $('#floor').textbox('clear');
                                 $('#floor').combobox('reload', url);
-                                $('#room').combobox('reload', url);
+                                $('#roomNumber').combobox('reload', url);
                             },
                             panelHeight:'auto',
                             required:true
@@ -35,9 +35,9 @@
                             valueField:'floor',
                             textField:'floor',
                             onSelect: function(rec){
-                                var url = 'getRoom?floor='+rec.floor+'&locationCode='+rec.locationCode;
-                                $('#room').textbox('clear');
-                                $('#room').combobox('reload', url);
+                                var url = 'getRoomNumber?floor='+rec.floor+'&locationCode='+rec.locationCode;
+                                $('#roomNumber').textbox('clear');
+                                $('#roomNumber').combobox('reload', url);
                             },
                             
                             panelHeight:'auto',
@@ -47,7 +47,7 @@
 
 
                 <div style="margin-bottom:1px" class="two-column-70">
-                    <input class="easyui-combobox" name="room" id="room" style="width:100%;" data-options="
+                    <input class="easyui-combobox" name="roomNumber" id="roomNumber" style="width:100%;" data-options="
                             valueField:'roomNumber',
                             textField:'roomDescription',
                             panelHeight:'auto',
@@ -77,14 +77,15 @@
 
         </form>
         <div style="text-align:center;padding:5px 0">
-            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitForm()" style="width:80px">Submit</a>
-            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()" style="width:80px">Clear</a>
+            <input value="Submit" id="submitButton" onclick="submitForm()" style="width:80px">
+            <!--<a href="javascript:void(0)" id="clearButton" class="easyui-linkbutton" onclick="clearForm()" style="width:80px">Clear</a>-->
         </div>
     </div>
 
    <div id="error-messages"> </div>
 
     <script>
+        
         function submitForm(){
 
             $('#ff').form('submit',{
@@ -93,20 +94,23 @@
                     if(!validForm) {
                         return validForm;
                     } else {
-                        var location = $('#location').val();
+                        var locationCode = $('#locationCode').val();
                         var floor = $('#floor').val();
-                        var room = $('#room').val();
+                        var roomNumber = $('#roomNumber').val();
                         var projectTitle = $('#projectTitle').val();
                         var scopeOfWorks = $('#scopeOfWorks').val();
                         var projectJustification = $('#projectJustification').val();
                         var dateNeeded = $('#dateNeeded').val();
-
+                        alert('hi');
+                     
+                        $("#submitButton").prop('disabled', true);
+alert($("#submitButton"));/*
                         jQuery.ajax({
                             url: "setRequestBAM",
-                            data:'location='+location+'&floor='+floor+'&room='+room+'&projectTitle='+projectTitle+'&scopeOfWorks='+scopeOfWorks+'&projectJustification='+projectJustification+'&dateNeeded='+dateNeeded,
+                            data:'locationCode='+locationCode+'&floor='+floor+'&roomNumber='+roomNumber+'&projectTitle='+projectTitle+'&scopeOfWorks='+scopeOfWorks+'&projectJustification='+projectJustification+'&dateNeeded='+dateNeeded,
                             type: "POST",
                             success:function(data){
-                                
+                                console.log(data);
                                 if(data == 1) {
                                     console.log('success');
                                     $('div#location-div').html('');
@@ -117,39 +121,39 @@
 
                                     var obj = $.parseJSON(data);
                                     var dateNeeded = obj['dateNeeded'];
-                                    var room = obj['room'];
+                                    var roomNumber = obj['roomNumber'];
                                     var floor = obj['floor'];
-                                    var location = obj['location'];
+                                    var locationCode = obj['locationCode'];
                                     var scopeOfWorks = obj['scopeOfWorks'];
                                     var projectJustification = obj['projectJustification'];
                                     var projectTitle = obj['projectTitle'];
-                                    var locationNotExist = obj['locationNotExist'];
+                                    var locationCodeNotExist = obj['locationCodeNotExist'];
                                     var floorNotExist = obj['floorNotExist'];
-                                    var roomNotExist = obj['roomNotExist'];
+                                    var roomNumberNotExist = obj['roomNumberNotExist'];
 
                                     $notExistMessage = '';
-                                    if(locationNotExist != undefined) {
-                                        $notExistMessage =  $notExistMessage + locationNotExist + "<br>";
+                                    if(locationCodeNotExist != undefined) {
+                                        $notExistMessage =  $notExistMessage + locationCodeNotExist + "<br>";
                                     }
 
                                     if(floorNotExist != undefined) {
                                         $notExistMessage =  $notExistMessage + floorNotExist + "<br>";
                                     } 
-                                    if(roomNotExist != undefined) {
-                                        $notExistMessage =  $notExistMessage + roomNotExist + "<br>";
+                                    if(roomNumberNotExist != undefined) {
+                                        $notExistMessage =  $notExistMessage + roomNumberNotExist + "<br>";
                                     } 
 
                                     if(dateNeeded != undefined) {
                                         $notExistMessage =  $notExistMessage + dateNeeded + "<br>";
                                     } 
-                                    if(room != undefined) {
-                                        $notExistMessage =  $notExistMessage + room + "<br>";
+                                    if(roomNumber != undefined) {
+                                        $notExistMessage =  $notExistMessage + roomNumber + "<br>";
                                     } 
                                     if(floor != undefined) {
                                         $notExistMessage =  $notExistMessage + floor + "<br>";
                                     } 
-                                    if(location != undefined) {
-                                        $notExistMessage =  $notExistMessage + location + "<br>";
+                                    if(locationCode != undefined) {
+                                        $notExistMessage =  $notExistMessage + locationCode + "<br>";
                                     } 
                                     if(scopeOfWorks != undefined) {
                                         $notExistMessage =  $notExistMessage + scopeOfWorks + "<br>";
@@ -171,7 +175,7 @@
 
                             },
                                 error:function (){}
-                        });
+                        });*/
                     }
 
                 }
