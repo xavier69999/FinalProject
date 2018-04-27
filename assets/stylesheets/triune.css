@@ -6,6 +6,31 @@ DATE CREATED: March 8, 2018
 DATE UPDATED: March 9, 2018
 --------------------------------------------------------------------*/
 
+
+#submitButton {
+    background-color: #0a0909a6;
+    border: none;
+    color: white;
+    padding: 5px 5px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 12px;
+}
+
+#clearButton {
+    background-color: #0a0909a6;
+    border: none;
+    color: white;
+    padding: 5px 5px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 12px;
+}
+
+
+
 div#error-messages {
     color:red; 
     font-size:.8em;

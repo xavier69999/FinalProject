@@ -77,15 +77,43 @@
 
         </form>
         <div style="text-align:center;padding:5px 0">
-            <input value="Submit" id="submitButton" onclick="submitForm()" style="width:80px">
-            <!--<a href="javascript:void(0)" id="clearButton" class="easyui-linkbutton" onclick="clearForm()" style="width:80px">Clear</a>-->
+            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitForm()" style="width:80px">Submit</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()" style="width:80px">Clear</a>
         </div>
     </div>
 
    <div id="error-messages"> </div>
-
+   <div id="dialog"> </div>
+  
+   <div id="dlg" class="easyui-dialog" title="Job Request Confirmation" style="width:800px;height:300px;padding:10px"
+            data-options="
+                modal: true,
+                closed: true,
+                buttons: [{
+                    text:'Confirmed',
+                    iconCls:'icon-ok',
+                    handler:function(){
+                        var locationCode = $('input#locationCode').val();
+                        var floor = $('input#floor').val();
+                        var roomNumber = $('input#roomNumber').val();
+                        var projectTitle = $('input#projectTitle').val();
+                        var scopeOfWorks = $('input#scopeOfWorks').val();
+                        var projectJustification = $('input#projectJustification').val();
+                        var dateNeeded = $('input#dateNeeded').val();
+                        insertDataViaAJAX(locationCode, floor, roomNumber, projectTitle, scopeOfWorks, projectJustification, dateNeeded);
+                        $('#dlg').dialog('close');
+                    }
+                },{
+                    text:'Cancel',
+                    handler:function(){
+                        $('#dlg').dialog('close');
+                    }
+                }]
+            ">
+            <div id="request-confirmation"> </div>
+    </div>    
+    
     <script>
-        
         function submitForm(){
 
             $('#ff').form('submit',{
@@ -94,6 +122,8 @@
                     if(!validForm) {
                         return validForm;
                     } else {
+
+
                         var locationCode = $('#locationCode').val();
                         var floor = $('#floor').val();
                         var roomNumber = $('#roomNumber').val();
@@ -101,87 +131,93 @@
                         var scopeOfWorks = $('#scopeOfWorks').val();
                         var projectJustification = $('#projectJustification').val();
                         var dateNeeded = $('#dateNeeded').val();
-                        alert('hi');
-                     
-                        $("#submitButton").prop('disabled', true);
-alert($("#submitButton"));/*
-                        jQuery.ajax({
-                            url: "setRequestBAM",
-                            data:'locationCode='+locationCode+'&floor='+floor+'&roomNumber='+roomNumber+'&projectTitle='+projectTitle+'&scopeOfWorks='+scopeOfWorks+'&projectJustification='+projectJustification+'&dateNeeded='+dateNeeded,
-                            type: "POST",
-                            success:function(data){
-                                console.log(data);
-                                if(data == 1) {
-                                    console.log('success');
-                                    $('div#location-div').html('');
+                        var confirmationData = "<u> Location Code: </u><input id='locationCode' value='" + locationCode + "' readonly><br><u>Floor:</u><input id='floor' value='" + floor + 
+                                                "' readonly><br><u>Room Number: </u><input id='roomNumber' value='" + roomNumber + 
+                                                "' readonly><br><u>Project Title: </u><input id='projectTitle' value='" + projectTitle + 
+                                                "' readonly><br><u> Scope of Works:</u><input id='scopeOfWorks' value='" + scopeOfWorks +
+                                                "' readonly><br><u>Project Justification:</u><textarea id='projectJustification' cols='100%' readonly>" + projectJustification + 
+                                                "</textarea><br><u>dateNeeded: </u><input id='dateNeeded' value='" + dateNeeded + "' readonly>" ; 
+                        $('#request-confirmation').html(confirmationData);
+                        $('#dlg').dialog('open');
+                        $('textarea#projectJustification').each(function () {
+                            this.setAttribute('style', 'height:' + (this.scrollHeight) + 'px;overflow-y:hidden;');
+                            }).on('input', function () {
+                            this.style.height = 'auto';
+                            this.style.height = (this.scrollHeight) + 'px';
+                        });
 
-                                    clearErrorMessages();
-                                    return true;
-                                } else {
-
-                                    var obj = $.parseJSON(data);
-                                    var dateNeeded = obj['dateNeeded'];
-                                    var roomNumber = obj['roomNumber'];
-                                    var floor = obj['floor'];
-                                    var locationCode = obj['locationCode'];
-                                    var scopeOfWorks = obj['scopeOfWorks'];
-                                    var projectJustification = obj['projectJustification'];
-                                    var projectTitle = obj['projectTitle'];
-                                    var locationCodeNotExist = obj['locationCodeNotExist'];
-                                    var floorNotExist = obj['floorNotExist'];
-                                    var roomNumberNotExist = obj['roomNumberNotExist'];
-
-                                    $notExistMessage = '';
-                                    if(locationCodeNotExist != undefined) {
-                                        $notExistMessage =  $notExistMessage + locationCodeNotExist + "<br>";
-                                    }
-
-                                    if(floorNotExist != undefined) {
-                                        $notExistMessage =  $notExistMessage + floorNotExist + "<br>";
-                                    } 
-                                    if(roomNumberNotExist != undefined) {
-                                        $notExistMessage =  $notExistMessage + roomNumberNotExist + "<br>";
-                                    } 
-
-                                    if(dateNeeded != undefined) {
-                                        $notExistMessage =  $notExistMessage + dateNeeded + "<br>";
-                                    } 
-                                    if(roomNumber != undefined) {
-                                        $notExistMessage =  $notExistMessage + roomNumber + "<br>";
-                                    } 
-                                    if(floor != undefined) {
-                                        $notExistMessage =  $notExistMessage + floor + "<br>";
-                                    } 
-                                    if(locationCode != undefined) {
-                                        $notExistMessage =  $notExistMessage + locationCode + "<br>";
-                                    } 
-                                    if(scopeOfWorks != undefined) {
-                                        $notExistMessage =  $notExistMessage + scopeOfWorks + "<br>";
-                                    } 
-
-                                    if(projectJustification != undefined) {
-                                        $notExistMessage =  $notExistMessage + projectJustification + "<br>";
-                                    } 
-
-                                    if(projectTitle != undefined) {
-                                        $notExistMessage =  $notExistMessage + projectTitle + "<br>";
-                                    } 
-
-                                    $('div#error-messages').html($notExistMessage);
-                                    
-                                    return false;
-
-                                }
-
-                            },
-                                error:function (){}
-                        });*/
                     }
 
                 }
             });
         }
-    
+
+
+        function insertDataViaAJAX(locationCode, floor, roomNumber, projectTitle, scopeOfWorks, projectJustification, dateNeeded) {
+            //console.log(locationCode + " - " + floor + " " + roomNumber + " " + projectTitle + " " + scopeOfWorks + " " + projectJustification + " " + dateNeeded);
+            jQuery.ajax({
+                url: "setRequestBAM",
+                data:'locationCode='+locationCode+'&floor='+floor+'&roomNumber='+roomNumber+'&projectTitle='+projectTitle+'&scopeOfWorks='+scopeOfWorks+'&projectJustification='+projectJustification+'&dateNeeded='+dateNeeded,
+                type: "POST",
+                success:function(data){
+                    console.log(data);
+                    if(data == 1) {
+                        console.log('success');
+                        clearErrorMessages();
+                        $('div.requestForm').remove();
+                        return true;
+                    } else {
+                        var obj = $.parseJSON(data);
+                        var dateNeeded = obj['dateNeeded'];
+                        var roomNumber = obj['roomNumber'];
+                        var floor = obj['floor'];
+                        var locationCode = obj['locationCode'];
+                        var scopeOfWorks = obj['scopeOfWorks'];
+                        var projectJustification = obj['projectJustification'];
+                        var projectTitle = obj['projectTitle'];
+                        var locationCodeNotExist = obj['locationCodeNotExist'];
+                        var floorNotExist = obj['floorNotExist'];
+                        var roomNumberNotExist = obj['roomNumberNotExist'];
+
+                        $notExistMessage = '';
+                        if(locationCodeNotExist != undefined) {
+                            $notExistMessage =  $notExistMessage + locationCodeNotExist + "<br>";
+                        }
+                        if(floorNotExist != undefined) {
+                            $notExistMessage =  $notExistMessage + floorNotExist + "<br>";
+                        } 
+                        if(roomNumberNotExist != undefined) {
+                            $notExistMessage =  $notExistMessage + roomNumberNotExist + "<br>";
+                        } 
+                        if(dateNeeded != undefined) {
+                            $notExistMessage =  $notExistMessage + dateNeeded + "<br>";
+                        } 
+                        if(roomNumber != undefined) {
+                            $notExistMessage =  $notExistMessage + roomNumber + "<br>";
+                        } 
+                        if(floor != undefined) {
+                            $notExistMessage =  $notExistMessage + floor + "<br>";
+                        } 
+                        if(locationCode != undefined) {
+                            $notExistMessage =  $notExistMessage + locationCode + "<br>";
+                        } 
+                        if(scopeOfWorks != undefined) {
+                            $notExistMessage =  $notExistMessage + scopeOfWorks + "<br>";
+                        } 
+                        if(projectJustification != undefined) {
+                            $notExistMessage =  $notExistMessage + projectJustification + "<br>";
+                        } 
+                        if(projectTitle != undefined) {
+                            $notExistMessage =  $notExistMessage + projectTitle + "<br>";
+                        } 
+                        $('div#error-messages').html($notExistMessage);
+                        return false;
+                    }
+                },
+                error:function (){}
+            }); //jQuery.ajax({
+        } //function insertDataViaAJAX
+
         function clearForm(){
             console.log($('#ff').form());
             $('#ff').form('clear');

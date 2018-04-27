@@ -14,7 +14,7 @@ class triuneData extends MY_Controller {
 	 * AUTHOR: Randy D. Lagdaan
 	 * DESCRIPTION: Data Controller.  
 	 * DATE CREATED: April 22, 2018
-     * DATE UPDATED: April 22, 2018
+     * DATE UPDATED: April 26, 2018
 	 */
 
     function __construct() {
@@ -124,24 +124,35 @@ class triuneData extends MY_Controller {
 				echo json_encode($notExistMessage);
 			} elseif(count($notExistMessage) == 0) {
 
-				$insertData = null;
-				$insertData = array(
-					  'locationCode' => $locationCode,
-					  'floor' => $floor,
-					  'roomNumber' => $roomNumber,
-					  'projectTitle' => $projectTitle,
-					  'scopeOfWorks' => $scopeOfWorks, 
-					  'projectJustification' => $projectJustification,
-					  'requestStatus' => $this->_getRequestStatus('NEW', 'BAM'),
-					  'dateNeeded' => $dateNeeded,
-					  'dateCreated' => $this->_getCurrentDate(),
-					  'userName' => $this->_getUserName(1),
-					  'workstationID' => $this->_getIPAddress(),
-					  'timeStamp' => $this->_getTimeStamp(),
-			  );				 
-					  
-			  $this->_insertRecords($tableName = 'triune_job_request_transaction_bam', $insertData);        			 
-	 
+				$userName = $this->_getUserName(1);
+
+				$transactionExist = $this->_getRecordsData($data = array('locationCode'), 
+				$tables = array('triune_job_request_transaction_bam'), 
+				$fieldName = array('locationCode', 'floor', 'roomNumber', 'projectTitle', 'scopeOfWorks', 'projectJustification', 'dateNeeded', 'userName'), 
+				$where = array($locationCode, $floor, $roomNumber, $projectTitle, $scopeOfWorks, $projectJustification, $dateNeeded, $userName), 
+				$join = null, $joinType = null, $sortBy = null, $sortOrder = null, 
+				$limit = null, 	$fieldNameLike = null, $like = null, $whereSpecial = null, $groupBy = null );
+		
+
+				if(empty($transactionExist)) {
+					$insertData = null;
+					$insertData = array(
+						'locationCode' => $locationCode,
+						'floor' => $floor,
+						'roomNumber' => $roomNumber,
+						'projectTitle' => $projectTitle,
+						'scopeOfWorks' => $scopeOfWorks, 
+						'projectJustification' => $projectJustification,
+						'requestStatus' => $this->_getRequestStatus('NEW', 'BAM'),
+						'dateNeeded' => $dateNeeded,
+						'dateCreated' => $this->_getCurrentDate(),
+						'userName' => $userName,
+						'workstationID' => $this->_getIPAddress(),
+						'timeStamp' => $this->_getTimeStamp(),
+					);				 
+					$this->_insertRecords($tableName = 'triune_job_request_transaction_bam', $insertData);        			 
+					echo 1;
+				}
 				echo 1;
 			}
 			

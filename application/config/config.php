@@ -24,7 +24,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 |
 */
 //$domainName = $_SERVER['SERVER_ADDR'];
-$domainName = "localhost";
+$domainName = "192.168.2.153";
 $config['base_url'] = 'http://' . $domainName . '/myTriune/';
 $config['server_root'] = $_SERVER['DOCUMENT_ROOT'];
 
