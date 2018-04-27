@@ -5,7 +5,14 @@ MATERIAL: Main Cascading Style Sheet for TRIUNE
 DATE CREATED: March 8, 2018
 DATE UPDATED: March 9, 2018
 --------------------------------------------------------------------*/
+input.modal-textbox {
+    border: none;
+    border-bottom: 2px solid red;
+    color: blue;
+    font-size: 20px;
 
+
+}
 
 #submitButton {
     background-color: #0a0909a6;

@@ -27,4 +27,19 @@ class triuneJRS extends MY_Controller {
         $this->load->view('bamjrs/create');
     }
 
+    public function BAMCreateRequestConfirmation() {
+		$data['locationCode'] = $_POST["locationCode"];
+		$data['floor'] = $_POST["floor"];
+		$data['roomNumber'] = $_POST["roomNumber"];
+		$data['projectTitle'] = $_POST["projectTitle"];
+		$data['scopeOfWorks'] = $_POST["scopeOfWorks"];
+		$data['projectJustification'] = $_POST["projectJustification"];
+		$data['dateNeeded'] = $_POST["dateNeeded"];
+
+
+        $this->load->view('bamjrs/createConfirmation', $data);
+    }
+
+
+
 }

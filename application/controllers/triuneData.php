@@ -124,7 +124,7 @@ class triuneData extends MY_Controller {
 				echo json_encode($notExistMessage);
 			} elseif(count($notExistMessage) == 0) {
 
-				$userName = $this->_getUserName(1);
+				/*$userName = $this->_getUserName(1);
 
 				$transactionExist = $this->_getRecordsData($data = array('locationCode'), 
 				$tables = array('triune_job_request_transaction_bam'), 
@@ -151,14 +151,87 @@ class triuneData extends MY_Controller {
 						'timeStamp' => $this->_getTimeStamp(),
 					);				 
 					$this->_insertRecords($tableName = 'triune_job_request_transaction_bam', $insertData);        			 
-					echo 1;
-				}
-				echo 1;
+
+					$insertedRecord = $this->_getRecordsData($data = array('ID'), 
+					$tables = array('triune_job_request_transaction_bam'), 
+					$fieldName = array('locationCode', 'floor', 'roomNumber', 'projectTitle', 'scopeOfWorks', 'projectJustification', 'dateNeeded', 'userName'), 
+					$where = array($locationCode, $floor, $roomNumber, $projectTitle, $scopeOfWorks, $projectJustification, $dateNeeded, $userName), 
+					$join = null, $joinType = null, $sortBy = null, $sortOrder = null, 
+					$limit = null, 	$fieldNameLike = null, $like = null, $whereSpecial = null, $groupBy = null );
+					
+					$returnValue = array();
+	
+					$returnValue['ID'] = $insertedRecord[0]->ID;*/
+					$returnValue = array();
+					
+					$returnValue['locationCode'] = $locationCode;
+					$returnValue['floor'] = $floor;
+					$returnValue['roomNumber'] = $roomNumber;
+					$returnValue['projectTitle'] = $projectTitle;
+					$returnValue['scopeOfWorks'] = $scopeOfWorks;
+					$returnValue['projectJustification'] = $projectJustification;
+					$returnValue['dateNeeded'] = $dateNeeded;
+
+
+					$returnValue['success'] = 1;
+					echo json_encode($returnValue);
+				//}
 			}
 			
-
-			
 		}	
+
+	}
+
+	public function insertRequestBAM() {
+		$locationCode = $_POST["locationCode"];
+		$floor = $_POST["floor"];
+		$roomNumber = $_POST["roomNumber"];
+		$projectTitle = $_POST["projectTitle"];
+		$scopeOfWorks = $_POST["scopeOfWorks"];
+		$projectJustification = $_POST["projectJustification"];
+		$dateNeeded = $_POST["dateNeeded"];
+		
+		$userName = $this->_getUserName(1);
+
+		$transactionExist = $this->_getRecordsData($data = array('locationCode'), 
+		$tables = array('triune_job_request_transaction_bam'), 
+		$fieldName = array('locationCode', 'floor', 'roomNumber', 'projectTitle', 'scopeOfWorks', 'projectJustification', 'dateNeeded', 'userName'), 
+		$where = array($locationCode, $floor, $roomNumber, $projectTitle, $scopeOfWorks, $projectJustification, $dateNeeded, $userName), 
+		$join = null, $joinType = null, $sortBy = null, $sortOrder = null, 
+		$limit = null, 	$fieldNameLike = null, $like = null, $whereSpecial = null, $groupBy = null );
+		
+
+		if(empty($transactionExist)) {
+			$insertData = null;
+			$insertData = array(
+				'locationCode' => $locationCode,
+				'floor' => $floor,
+				'roomNumber' => $roomNumber,
+				'projectTitle' => $projectTitle,
+				'scopeOfWorks' => $scopeOfWorks, 
+				'projectJustification' => $projectJustification,
+				'requestStatus' => $this->_getRequestStatus('NEW', 'BAM'),
+				'dateNeeded' => $dateNeeded,
+				'dateCreated' => $this->_getCurrentDate(),
+				'userName' => $userName,
+				'workstationID' => $this->_getIPAddress(),
+				'timeStamp' => $this->_getTimeStamp(),
+			);				 
+			$this->_insertRecords($tableName = 'triune_job_request_transaction_bam', $insertData);        			 
+
+			$insertedRecord = $this->_getRecordsData($data = array('ID'), 
+			$tables = array('triune_job_request_transaction_bam'), 
+			$fieldName = array('locationCode', 'floor', 'roomNumber', 'projectTitle', 'scopeOfWorks', 'projectJustification', 'dateNeeded', 'userName'), 
+			$where = array($locationCode, $floor, $roomNumber, $projectTitle, $scopeOfWorks, $projectJustification, $dateNeeded, $userName), 
+			$join = null, $joinType = null, $sortBy = null, $sortOrder = null, 
+			$limit = null, 	$fieldNameLike = null, $like = null, $whereSpecial = null, $groupBy = null );
+					
+			$returnValue = array();
+	
+			$returnValue['ID'] = $insertedRecord[0]->ID;
+			$returnValue['success'] = 1;
+			echo json_encode($returnValue);
+		}
 
 	}
 }
