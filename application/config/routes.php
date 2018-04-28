@@ -60,11 +60,13 @@ $route['main'] = 'triuneAuth/mainView';
 $route['main/jobRequest'] = 'triuneMain/jobRequest';
 $route['bamjrs/create'] = 'triuneJRS/BAMCreateRequest';
 $route['bamjrs/getCreateConfirmation'] = 'triuneJRS/BAMCreateRequestConfirmation';
+$route['bamjrs/getCreatedRequest'] = 'triuneJRS/BAMCreatedRequest';
 $route['getLocationCode'] = 'triuneData/getLocationCode'; 
 $route['getFloor'] = 'triuneData/getFloor'; 
 $route['getRoomNumber'] = 'triuneData/getRoomNumber'; 
 $route['setRequestBAM'] = 'triuneData/setRequestBAM'; 
 $route['insertRequestBAM'] = 'triuneData/insertRequestBAM'; 
+$route['uploadFile'] = 'triuneFile/uploadFile'; 
 
 
 $route['404_override'] = '';

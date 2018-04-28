@@ -40,6 +40,11 @@ class triuneJRS extends MY_Controller {
         $this->load->view('bamjrs/createConfirmation', $data);
     }
 
+    public function BAMCreatedRequest() {
+		$data['ID'] = $_POST["ID"];
+        $this->load->view('bamjrs/createdRequest', $data);
+    }
+
 
 
 }

@@ -40,42 +40,26 @@ function checkDataViaAJAX(locationCode, floor, roomNumber, projectTitle, scopeOf
                 projectJustification = resultValue['projectJustification'];
                 dateNeeded = resultValue['dateNeeded'];
 
-              //  var confirmationData = "<u> Location Code: </u><input id='locationCode' value='" + locationCode + "' readonly><br><u>Floor:</u><input id='floor' value='" + floor + 
-              //                          "' readonly><br><u>Room Number: </u><input id='roomNumber' value='" + roomNumber + 
-              //                          "' readonly><br><u>Project Title: </u><input id='projectTitle' value='" + projectTitle + 
-              //                          "' readonly><br><u> Scope of Works:</u><input id='scopeOfWorks' value='" + scopeOfWorks +
-              //                          "' readonly><br><u>Project Justification:</u><textarea id='projectJustification' cols='100%' readonly>" + projectJustification + 
-              //                          "</textarea><br><u>dateNeeded: </u><input id='dateNeeded' value='" + dateNeeded + "' readonly>" ; 
 
-
-                                        $.ajax({
-                                            url: 'bamjrs/getCreateConfirmation',
-                                            data: 'locationCode='+locationCode+'&floor='+floor+'&roomNumber='+roomNumber+'&projectTitle='+projectTitle+'&scopeOfWorks='+scopeOfWorks+'&projectJustification='+projectJustification+'&dateNeeded='+dateNeeded,
-                                            type: "POST",
-                                            success: function(response) {
-                                                $('#request-confirmation').html(response);
-                                                $('#dlg').dialog('open');
-                                                //$('textarea#projectJustification').each(function () {
-                                                //    this.setAttribute('style', 'height:' + (this.scrollHeight) + 'px;overflow-y:hidden;');
-                                                //    }).on('input', function () {
-                                                //    this.style.height = 'auto';
-                                                //    this.style.height = (this.scrollHeight) + 'px';
-                                                //});
-                                               console.log("the request is successful!");
-                                                                            
-                                            },
+                $.ajax({
+                    url: 'bamjrs/getCreateConfirmation',
+                    data: 'locationCode='+locationCode+'&floor='+floor+'&roomNumber='+roomNumber+'&projectTitle='+projectTitle+'&scopeOfWorks='+scopeOfWorks+'&projectJustification='+projectJustification+'&dateNeeded='+dateNeeded,
+                    type: "POST",
+                    success: function(response) {
+                        $('#request-confirmation').html(response);
+                        $('#dlg').dialog('open');
+                        console.log("the request is successful!");
+                    },
                                 
-                                            error: function(error) {
-                                                console.log('the page was NOT loaded', error);
-                                                $('.content1').html(error);
-                                                
-                                            },
+                    error: function(error) {
+                        console.log('the page was NOT loaded', error);
+                        $('.content1').html(error);
+                    },
                                 
-                                            complete: function(xhr, status) {
-                                                console.log("The request is complete!");
-                                            }
-                                            
-                                        });
+                    complete: function(xhr, status) {
+                        console.log("The request is complete!");
+                    }
+                });
 
 
             } else {
@@ -138,11 +122,10 @@ function insertDataViaAJAX(locationCode, floor, roomNumber, projectTitle, scopeO
         data:'locationCode='+locationCode+'&floor='+floor+'&roomNumber='+roomNumber+'&projectTitle='+projectTitle+'&scopeOfWorks='+scopeOfWorks+'&projectJustification='+projectJustification+'&dateNeeded='+dateNeeded,
         type: "POST",
         success:function(data){
-            console.log('hi');
-            console.log(data);
             var resultValue = $.parseJSON(data);
             if(resultValue['success'] == 1) {
                 $('div.requestForm').remove();
+                displayRequestNumber(resultValue['ID']);
                 return true;
             } else {
                 return false;
@@ -153,6 +136,26 @@ function insertDataViaAJAX(locationCode, floor, roomNumber, projectTitle, scopeO
 } //function insertDataViaAJAX
 
 
+function displayRequestNumber(ID) {
+    jQuery.ajax({
+        url: 'bamjrs/getCreatedRequest',
+        data: 'ID='+ID,
+        type: "POST",
+        success: function(response) {
+            $('.content1').html(response);
+            console.log("the request is successful for content1!");
+        },
+                    
+        error: function(error) {
+            console.log('the page was NOT loaded', error);
+            $('.content1').html(error);
+        },
+                    
+        complete: function(xhr, status) {
+            console.log("The request is complete!");
+        }
+}); //jQuery.ajax({
+}
 
 
 function clearForm(){
