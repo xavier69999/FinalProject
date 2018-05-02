@@ -27,6 +27,10 @@ class triuneFile extends MY_Controller {
 
 	public function uploadFile() {
 		$ID = $_POST["ID"];
+		$userName = $this->_getUserName(1);
+		$insertData = null;
+		$workstationID = $this->_getIPAddress();
+		$timeStamp = $this->_getTimeStamp();
 		sleep(3);
 		if($_FILES["files"]["name"] != '') {
 			$output = '';
@@ -34,7 +38,8 @@ class triuneFile extends MY_Controller {
 	  		$config["allowed_types"] = 'gif|jpg|png|pdf';
 	  		$this->load->library('upload', $config);
 	  		$this->upload->initialize($config);
-	  
+			
+	
 			for($count = 0; $count<count($_FILES["files"]["name"]); $count++) {
 				$_FILES["file"]["name"] = $ID . "-" . $_FILES["files"]["name"][$count];
 				$_FILES["file"]["type"] = $_FILES["files"]["type"][$count];
@@ -50,6 +55,18 @@ class triuneFile extends MY_Controller {
 					</div>
 					';
 				}
+				$insertData = array(
+					'requestNumber' => $ID,
+					'attachments' => $_FILES["file"]["name"] ,
+					'userName' => $userName,
+					'workstationID' => $workstationID,
+					'timeStamp' => $timeStamp,
+				);				 
+				$this->_insertRecords($tableName = 'triune_job_request_transaction_bam_attachments', $insertData);        			 
+					
+
+			
+			
 			}
 			echo $output;   
 		}

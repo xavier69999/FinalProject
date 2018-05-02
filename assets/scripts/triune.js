@@ -22,6 +22,7 @@ $(document).ready(function(){
             dataType: "html",
             cache: false,
             success: function(response) {
+                ///alert(response);
                 console.log('the page was loaded');
                 $('.content').append(response);
 
