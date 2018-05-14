@@ -5,13 +5,8 @@ MATERIAL: Main Cascading Style Sheet for TRIUNE
 DATE CREATED: March 8, 2018
 DATE UPDATED: March 9, 2018
 --------------------------------------------------------------------*/
-input.modal-textbox {
-    border: none;
-    border-bottom: 2px solid red;
-    color: blue;
-    font-size: 20px;
-
-
+body {
+    font-family: "Lato", sans-serif;
 }
 
 #submitButton {
@@ -153,4 +148,66 @@ b.jQueryFormValidationMessage {
         width: 100%;
     }
 }
+
+div.form-style-1 {
+    margin:2px auto;
+    max-width:100%;
+    padding: 5px 5px 5px 5px;
+    font-size: 14px;
+    border-style: solid;
+    border-width: 1px;
+}
+
+
+
+b.small {
+    align-self: center;
+    min-width: 80px;
+    max-width: 500px;
+    border: none;
+    background-color: transparent;
+    border-bottom: 2px solid black;
+    font-size: 16px
+
+
+}
+
+
+
+#multi-columns:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+#three-columns {
+    float: left;
+    width: 33.33%;
+    padding: 5px;
+}
+
+#two-columns-30 {
+    float: left;
+    width: 30%;
+    padding: 5px;
+}
+#two-columns-70 {
+    float: left;
+    width: 70%;
+    padding: 5px;
+}
+
+#two-columns {
+    float: left;
+    width: 50%;
+    padding: 5px;
+}
+
+#one-column {
+    width: 100%;
+    padding: 5px;
+}
+
+
+
 

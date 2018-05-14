@@ -61,9 +61,17 @@ $route['main/jobRequest'] = 'triuneMain/jobRequest';
 $route['bamjrs/create'] = 'triuneJRS/BAMCreateRequest';
 $route['bamjrs/getCreateConfirmation'] = 'triuneJRS/BAMCreateRequestConfirmation';
 $route['bamjrs/getCreatedRequest'] = 'triuneJRS/BAMCreatedRequest';
+$route['bamjrs/getMyRequestList'] = 'triuneJRS/BAMMyRequestList';
+$route['bamjrs/getNewRequestList'] = 'triuneJRS/BAMNewRequestList';
+$route['bamjrs/getNewRequestVerification'] = 'triuneJRS/BAMNewRequestVerification';
+
+
 $route['getLocationCode'] = 'triuneData/getLocationCode'; 
 $route['getFloor'] = 'triuneData/getFloor'; 
 $route['getRoomNumber'] = 'triuneData/getRoomNumber'; 
+$route['getBAMJRSMyRequestList'] = 'triuneData/getBAMJRSMyRequestList'; 
+$route['getBAMJRSRequestList'] = 'triuneData/getBAMJRSRequestList'; 
+
 $route['setRequestBAM'] = 'triuneData/setRequestBAM'; 
 $route['insertRequestBAM'] = 'triuneData/insertRequestBAM'; 
 $route['uploadFile'] = 'triuneFile/uploadFile'; 

@@ -3,8 +3,10 @@ $(document).ready(function(){
     $('div[select-item]').on('click', function(e){
         e.preventDefault();
         var pageRef = $(this).attr('select-item');
+        //alert(pageRef);
         removeDOMForm();
         callItem(pageRef);
+ 
     });
 
     function removeDOMForm() {

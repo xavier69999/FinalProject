@@ -1,0 +1,1 @@
+INSERT INTO triune_job_request_transaction_bam VALUES (194, 'HSC', '2', 'HSC-203', 'Airconditiong unit is not cooling', 'One airconditioning unit is in need of repair', 'Students are having a hard time focusing on lessons due to hot temperature.', 'N', '2018-05-18', '2018-05-14', 'jtsy', '::1', '2018-05-14 07:14:33');

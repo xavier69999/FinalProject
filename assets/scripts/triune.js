@@ -25,18 +25,15 @@ $(document).ready(function(){
                 ///alert(response);
                 console.log('the page was loaded');
                 $('.content').append(response);
-
             },
 
             error: function(error) {
                 console.log('the page was NOT loaded', error);
                 $('.content').html(error);
-                
             },
 
             complete: function(xhr, status) {
                 console.log("The request is complete!");
-
             }
 
         });

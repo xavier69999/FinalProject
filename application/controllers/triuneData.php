@@ -14,7 +14,7 @@ class triuneData extends MY_Controller {
 	 * AUTHOR: Randy D. Lagdaan
 	 * DESCRIPTION: Data Controller.  
 	 * DATE CREATED: April 22, 2018
-     * DATE UPDATED: April 26, 2018
+     * DATE UPDATED: May 14, 2018
 	 */
 
     function __construct() {
@@ -124,44 +124,6 @@ class triuneData extends MY_Controller {
 				echo json_encode($notExistMessage);
 			} elseif(count($notExistMessage) == 0) {
 
-				/*$userName = $this->_getUserName(1);
-
-				$transactionExist = $this->_getRecordsData($data = array('locationCode'), 
-				$tables = array('triune_job_request_transaction_bam'), 
-				$fieldName = array('locationCode', 'floor', 'roomNumber', 'projectTitle', 'scopeOfWorks', 'projectJustification', 'dateNeeded', 'userName'), 
-				$where = array($locationCode, $floor, $roomNumber, $projectTitle, $scopeOfWorks, $projectJustification, $dateNeeded, $userName), 
-				$join = null, $joinType = null, $sortBy = null, $sortOrder = null, 
-				$limit = null, 	$fieldNameLike = null, $like = null, $whereSpecial = null, $groupBy = null );
-		
-
-				if(empty($transactionExist)) {
-					$insertData = null;
-					$insertData = array(
-						'locationCode' => $locationCode,
-						'floor' => $floor,
-						'roomNumber' => $roomNumber,
-						'projectTitle' => $projectTitle,
-						'scopeOfWorks' => $scopeOfWorks, 
-						'projectJustification' => $projectJustification,
-						'requestStatus' => $this->_getRequestStatus('NEW', 'BAM'),
-						'dateNeeded' => $dateNeeded,
-						'dateCreated' => $this->_getCurrentDate(),
-						'userName' => $userName,
-						'workstationID' => $this->_getIPAddress(),
-						'timeStamp' => $this->_getTimeStamp(),
-					);				 
-					$this->_insertRecords($tableName = 'triune_job_request_transaction_bam', $insertData);        			 
-
-					$insertedRecord = $this->_getRecordsData($data = array('ID'), 
-					$tables = array('triune_job_request_transaction_bam'), 
-					$fieldName = array('locationCode', 'floor', 'roomNumber', 'projectTitle', 'scopeOfWorks', 'projectJustification', 'dateNeeded', 'userName'), 
-					$where = array($locationCode, $floor, $roomNumber, $projectTitle, $scopeOfWorks, $projectJustification, $dateNeeded, $userName), 
-					$join = null, $joinType = null, $sortBy = null, $sortOrder = null, 
-					$limit = null, 	$fieldNameLike = null, $like = null, $whereSpecial = null, $groupBy = null );
-					
-					$returnValue = array();
-	
-					$returnValue['ID'] = $insertedRecord[0]->ID;*/
 					$returnValue = array();
 					
 					$returnValue['locationCode'] = $locationCode;
@@ -202,8 +164,12 @@ class triuneData extends MY_Controller {
 		
 
 		if(empty($transactionExist)) {
-			$insertData = null;
-			$insertData = array(
+
+			$systemForAuditName = "BAMJRS";
+			$moduleName = "Create Request";
+
+			$insertData1 = null;
+			$insertData1 = array(
 				'locationCode' => $locationCode,
 				'floor' => $floor,
 				'roomNumber' => $roomNumber,
@@ -217,23 +183,189 @@ class triuneData extends MY_Controller {
 				'workstationID' => $this->_getIPAddress(),
 				'timeStamp' => $this->_getTimeStamp(),
 			);				 
-			$this->_insertRecords($tableName = 'triune_job_request_transaction_bam', $insertData);        			 
 
-			$insertedRecord = $this->_getRecordsData($data = array('ID'), 
-			$tables = array('triune_job_request_transaction_bam'), 
-			$fieldName = array('locationCode', 'floor', 'roomNumber', 'projectTitle', 'scopeOfWorks', 'projectJustification', 'dateNeeded', 'userName'), 
-			$where = array($locationCode, $floor, $roomNumber, $projectTitle, $scopeOfWorks, $projectJustification, $dateNeeded, $userName), 
-			$join = null, $joinType = null, $sortBy = null, $sortOrder = null, 
-			$limit = null, 	$fieldNameLike = null, $like = null, $whereSpecial = null, $groupBy = null );
-					
+			$this->db->trans_start();
+				$this->_insertRecords($tableName = 'triune_job_request_transaction_bam', $insertData1);        			 
+
+				$insertedRecord1 = $this->_getRecordsData($data = array('ID'), 
+				$tables = array('triune_job_request_transaction_bam'), 
+				$fieldName = array('locationCode', 'floor', 'roomNumber', 'projectTitle', 'scopeOfWorks', 'projectJustification', 'dateNeeded', 'userName'), 
+				$where = array($locationCode, $floor, $roomNumber, $projectTitle, $scopeOfWorks, $projectJustification, $dateNeeded, $userName), 
+				$join = null, $joinType = null, $sortBy = null, $sortOrder = null, 
+				$limit = null, 	$fieldNameLike = null, $like = null, $whereSpecial = null, $groupBy = null );
+
+				$actionName1 = "Insert New Transaction Request";
+				$for1 = $insertedRecord1[0]->ID . ";" . $userName;
+				$oldValue1 = null;
+				$newValue1 =  $insertData1;
+				$this->_insertAuditTrail($actionName1, $systemForAuditName, $moduleName, $for1, $oldValue1, $newValue1);		
+
+
+			$insertData2 = null;
+			$insertData2 = array(
+				'requestNumber' =>$insertedRecord1[0]->ID,
+				'requestStatus' => $this->_getRequestStatus('NEW', 'BAM'),
+				'userName' => $userName,
+				'workstationID' => $this->_getIPAddress(),
+				'timeStamp' => $this->_getTimeStamp(),
+			);				 
+
+				$this->_insertRecords($tableName = 'triune_job_request_transaction_bam_status_history', $insertData2);        			 
+
+				$insertedRecord2 = $this->_getRecordsData($data = array('ID'), 
+				$tables = array('triune_job_request_transaction_bam_status_history'), 
+				$fieldName = array('requestNumber', 'requestStatus', 'userName'), 
+				$where = array($insertedRecord1[0]->ID, $this->_getRequestStatus('NEW', 'BAM'), $userName), 
+				$join = null, $joinType = null, $sortBy = null, $sortOrder = null, 
+				$limit = null, 	$fieldNameLike = null, $like = null, $whereSpecial = null, $groupBy = null );
+
+				$actionName2 = "Insert New Transaction Request Status History";
+				$for2 = $insertedRecord2[0]->ID . ";" .$userName;
+				$oldValue2 = null;
+				$newValue2 =  $insertData2;
+				$this->_insertAuditTrail($actionName2, $systemForAuditName, $moduleName, $for2, $oldValue2, $newValue2);		
+
+			$this->db->trans_complete();
+		
+			$fileName1 = "triune_job_request_transaction_bam-" . $this->_getCurrentDate();
+			$text1 = "INSERT INTO triune_job_request_transaction_bam ";
+			$text1 = $text1 .  "VALUES (" .  $insertedRecord1[0]->ID . ", ";
+			$text1 = $text1 .  "'".$locationCode . "', ";
+			$text1 = $text1 .  "'".$floor . "', ";
+			$text1 = $text1 .  "'".$roomNumber . "', ";
+			$text1 = $text1 .  "'".$projectTitle . "', ";
+			$text1 = $text1 .  "'".$scopeOfWorks . "', ";
+			$text1 = $text1 .  "'".$projectJustification . "', ";
+			$text1 = $text1 .  "'".$this->_getRequestStatus('NEW', 'BAM') . "', ";
+			$text1 = $text1 .  "'".$dateNeeded . "', ";
+			$text1 = $text1 .  "'".$this->_getCurrentDate() . "', ";
+			$text1 = $text1 .  "'".$userName . "', ";
+			$text1 = $text1 .  "'".$this->_getIPAddress() . "', ";
+			$text1 = $text1 .  "'".$this->_getTimeStamp();
+			$text1 = $text1 . "');";
+			$this->_insertTextLog($fileName1, $text1);
+
+			$fileName2 = "triune_job_request_transaction_bam_status_history-" . $this->_getCurrentDate();
+			$text2 = "INSERT INTO triune_job_request_transaction_bam_status_history ";
+			$text2 = $text2 .  "VALUES (" .  $insertedRecord2[0]->ID . ", ";
+			$text2 = $text2 .  "'".$insertedRecord1[0]->ID . "', ";
+			$text2 = $text2 .  "'".$this->_getRequestStatus('NEW', 'BAM') . "', ";
+			$text2 = $text2 .  "'".$userName . "', ";
+			$text2 = $text2 .  "'".$this->_getIPAddress() . "', ";
+			$text2 = $text2 .  "'".$this->_getTimeStamp();
+			$text2 = $text2 . "');";
+			$this->_insertTextLog($fileName2, $text2);
+			
+
+			if($this->db->trans_status() === FALSE) {
+				$this->_transactionFailed();
+				return FALSE;  
+			} 
+
 			$returnValue = array();
-	
-			$returnValue['ID'] = $insertedRecord[0]->ID;
+			$returnValue['ID'] = $insertedRecord1[0]->ID;
 			$returnValue['success'] = 1;
 			echo json_encode($returnValue);
-		}
+
+		} //if(empty($transactionExist))
 
 	}
+
+
+    public function getBAMJRSMyRequestList() {
+		$post = $this->input->post();  
+		$clean = $this->security->xss_clean($post);
+		
+		$page = isset($clean['page']) ? intval($clean['page']) : 1;
+		$rows = isset($clean['rows']) ? intval($clean['rows']) : 10;
+		$ID = isset($clean['ID']) ? $clean['ID'] : '';
+		$locationCode = isset($clean['locationCode']) ? $clean['locationCode'] : '';
+		$userName = $this->_getUserName(1);
+		 
+		$offset = ($page-1)*$rows;
+		$result = array();
+		$whereSpcl = "triune_job_request_transaction_bam.userName = '$userName' and triune_job_request_transaction_bam.ID like '$ID%' and triune_job_request_transaction_bam.locationCode like '$locationCode%'";
+	 
+
+
+		$results = $this->_getRecordsData($data = array('count(*) as totalRecs'), 
+			$tables = array('triune_job_request_transaction_bam'), $fieldName = null, $where = null, $join = null, $joinType = null, 
+			$sortBy = null, $sortOrder = null, $limit = null, 
+			$fieldNameLike = null, $like = null, 
+			$whereSpecial = array($whereSpcl), $groupBy = null );
+
+			//$row = mysql_fetch_row($results);
+			$result["total"] = intval($results[0]->totalRecs);
+
+			$results = $this->_getRecordsData($data = array('triune_job_request_transaction_bam.*', 'triune_request_status_reference.requestStatusDescription'), 
+			$tables = array('triune_job_request_transaction_bam', 'triune_request_status_reference'), 
+			$fieldName = array('triune_request_status_reference.application'), $where = array('BAM'), 
+			$join = array('triune_job_request_transaction_bam.requestStatus = triune_request_status_reference.requestStatusCode'), 
+			$joinType = array('left'), 
+			$sortBy = array('triune_job_request_transaction_bam.ID'), $sortOrder = array('desc'), 
+			$limit = array($rows, $offset), 
+			$fieldNameLike = null, $like = null, 
+			$whereSpecial = array($whereSpcl), $groupBy = null );
+			
+			//$items = array();
+			//while($row = mysql_fetch_object($results)){
+			//	array_push($items, $row);
+			//}
+			$result["rows"] = $results;
+
+			$result["ID"] = $ID;
+			$result["locationCode"] = $locationCode;
+
+
+			echo json_encode($result);
+	}
+
+
+
+    public function getBAMJRSRequestList() {
+		$post = $this->input->post();  
+		$clean = $this->security->xss_clean($post);
+		
+		$page = isset($clean['page']) ? intval($clean['page']) : 1;
+		$rows = isset($clean['rows']) ? intval($clean['rows']) : 10;
+		$ID = isset($clean['ID']) ? $clean['ID'] : '';
+		$locationCode = isset($clean['locationCode']) ? $clean['locationCode'] : '';
+		$requestStatus = isset($clean['requestStatus']) ? $clean['requestStatus'] : '';
+		$offset = ($page-1)*$rows;
+		$result = array();
+		$whereSpcl = "triune_job_request_transaction_bam.requestStatus = '$requestStatus' and triune_job_request_transaction_bam.ID like '$ID%' and triune_job_request_transaction_bam.locationCode like '$locationCode%'";
+	 
+
+
+		$results = $this->_getRecordsData($data = array('count(*) as totalRecs'), 
+			$tables = array('triune_job_request_transaction_bam'), $fieldName = null, $where = null, $join = null, $joinType = null, 
+			$sortBy = null, $sortOrder = null, $limit = null, 
+			$fieldNameLike = null, $like = null, 
+			$whereSpecial = array($whereSpcl), $groupBy = null );
+
+			//$row = mysql_fetch_row($results);
+			$result["total"] = intval($results[0]->totalRecs);
+
+			$results = $this->_getRecordsData($data = array('triune_job_request_transaction_bam.*', 'triune_request_status_reference.requestStatusDescription'), 
+			$tables = array('triune_job_request_transaction_bam', 'triune_request_status_reference'), 
+			$fieldName = array('triune_request_status_reference.application'), $where = array('BAM'), 
+			$join = array('triune_job_request_transaction_bam.requestStatus = triune_request_status_reference.requestStatusCode'), 
+			$joinType = array('left'), 
+			$sortBy = array('triune_job_request_transaction_bam.ID'), $sortOrder = array('desc'), 
+			$limit = array($rows, $offset), 
+			$fieldNameLike = null, $like = null, 
+			$whereSpecial = array($whereSpcl), $groupBy = null );
+			
+			$result["rows"] = $results;
+
+			$result["ID"] = $ID;
+			$result["locationCode"] = $locationCode;
+
+
+			echo json_encode($result);
+	}
+
+
 
 
 }

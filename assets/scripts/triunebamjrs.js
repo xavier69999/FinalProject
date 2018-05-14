@@ -116,7 +116,7 @@ function checkDataViaAJAX(locationCode, floor, roomNumber, projectTitle, scopeOf
 
 
 function insertDataViaAJAX(locationCode, floor, roomNumber, projectTitle, scopeOfWorks, projectJustification, dateNeeded) {
-    //console.log(locationCode + " - " + floor + " " + roomNumber + " " + projectTitle + " " + scopeOfWorks + " " + projectJustification + " " + dateNeeded);
+    console.log(locationCode + " - " + floor + " " + roomNumber + " " + projectTitle + " " + scopeOfWorks + " " + projectJustification + " " + dateNeeded);
     jQuery.ajax({
         url: "insertRequestBAM",
         data:'locationCode='+locationCode+'&floor='+floor+'&roomNumber='+roomNumber+'&projectTitle='+projectTitle+'&scopeOfWorks='+scopeOfWorks+'&projectJustification='+projectJustification+'&dateNeeded='+dateNeeded,
@@ -136,7 +136,7 @@ function insertDataViaAJAX(locationCode, floor, roomNumber, projectTitle, scopeO
 } //function insertDataViaAJAX
 
 
-function displayRequestNumber(ID) {
+function displayRequestNumber(ID, userName) {
     jQuery.ajax({
         url: 'bamjrs/getCreatedRequest',
         data: 'ID='+ID,
@@ -154,7 +154,7 @@ function displayRequestNumber(ID) {
         complete: function(xhr, status) {
             console.log("The request is complete!");
         }
-}); //jQuery.ajax({
+    }); //jQuery.ajax({
 }
 
 

@@ -12,6 +12,7 @@
 	<link rel="stylesheet" href="<?php echo base_url();?>assets/stylesheets/triune.css" />
 	<!-- basic scripts -->
 	<script type="text/javascript" src="<?php echo base_url();?>assets/scripts/jquery-3.3.1.min.js"></script>
+
 	<script src="<?php echo base_url();?>assets/scripts/bootstrap.js"></script>
 	<script src="<?php echo base_url();?>assets/scripts/triune.js"></script>
     
@@ -44,10 +45,11 @@
                 </div>
             </li>
         </ul>
-        <span class="ml-auto navbar-text">Username</span>
+        <span class="ml-auto navbar-text"><?php echo $this->session->userName; ?></span>
 
     </div>
 </nav>
 
 <div class="content"> </div>
 <div class="content1"> </div>
+<div class="content2"> </div>

@@ -1,13 +1,11 @@
+
+
 <div class="requestMenu">
 
     <link rel="stylesheet" type="text/css" href="<?php echo base_url();?>assets/thirdparty/easyui/themes/default/easyui.css">
     <link rel="stylesheet" type="text/css" href="<?php echo base_url();?>assets/thirdparty/easyui/themes/icon.css">
     <script type="text/javascript" src="<?php echo base_url();?>assets/thirdparty/easyui/jquery.easyui.min.js"></script>
 	<script src="<?php echo base_url();?>assets/scripts/triunejrs.js"></script>
-
-
-
-
 
     <div style="margin:20px 0;"></div>
     <div class="easyui-panel" style="padding:5px;">
@@ -18,12 +16,12 @@
         <div data-options="" select-item="bamjrs/create">Create New Requests</div>
 
         <div class="menu-sep"></div>
-        <div select-item="bamjrs/list">My Requests</div>
+        <div select-item="bamjrs/getMyRequestList">My Requests</div>
         <div>
             <span>Requests Queue</span>
             <div class="requestMenu">
-                <div select-item="bamjrs/new">New Requests</div>
-                <div select-item="bamjrs/open">Open Requests</div>
+                <div select-item="bamjrs/getNewRequestList">New Requests</div>
+                <div select-item="bamjrs/getOpenList">Open Requests</div>
                 <div select-item="bamjrs/approved">Approved Requests</div>
                 <div select-item="bamjrs/set">Set Requests</div>
                 <div select-item="bamjrs/wip">WIP Requests</div>

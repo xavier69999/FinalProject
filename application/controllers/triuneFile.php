@@ -20,7 +20,8 @@ class triuneFile extends MY_Controller {
     function __construct() {
         parent::__construct();
 		$this->load->library('session');
-        $this->load->library('form_validation'); 
+		$this->load->library('form_validation'); 
+
     }//function __construct()
 
 
@@ -35,7 +36,7 @@ class triuneFile extends MY_Controller {
 		if($_FILES["files"]["name"] != '') {
 			$output = '';
 			$config["upload_path"] = './assets/uploads/bamjrs/';
-	  		$config["allowed_types"] = 'gif|jpg|png|pdf';
+	  		$config["allowed_types"] = 'gif|jpg|png|pdf|jpeg';
 	  		$this->load->library('upload', $config);
 	  		$this->upload->initialize($config);
 			
