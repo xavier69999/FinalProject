@@ -11,7 +11,7 @@ class triuneJRS extends MY_Controller {
 	 * Since this controller is set as the default controller in
 	 * config/routes.php, it's displayed at http://tua.edu.ph/triune
 	 *
-	 * AUTHOR: Randy D. Lagdaan
+	 * AUTHOR: Xavier Sullano
 	 * DESCRIPTION: JRS Controller.  
 	 * DATE CREATED: April 21, 2018
      * DATE UPDATED: May 14, 2018

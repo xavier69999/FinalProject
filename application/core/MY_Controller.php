@@ -240,7 +240,7 @@ class MY_Controller extends CI_Controller {
         $fromEmail = "trinityemailer@gmail.com"; 
   
   
-        $this->email->from($fromEmail, 'Randy Lagdaan'); 
+        $this->email->from($fromEmail, 'Xavier Sullano'); 
         $this->email->to($toEmail);
         $this->email->subject($subject); 
         $this->email->message($message); 

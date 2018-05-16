@@ -11,7 +11,7 @@ class triuneMain extends MY_Controller {
 	 * Since this controller is set as the default controller in
 	 * config/routes.php, it's displayed at http://tua.edu.ph/triune
 	 *
-	 * AUTHOR: Randy D. Lagdaan
+	 * AUTHOR: Xavier Sullano
 	 * DESCRIPTION: Main Controller. Included 
 	 * DATE CREATED: April 19, 2018
      * DATE UPDATED: April 19, 2018
